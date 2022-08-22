@@ -18,11 +18,11 @@ namespace Lighthouse.AF_PayPalIPN
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req, ILogger log)
         { 
-            var result = await req.VerifyPayPalTransactionAsync(PayPalEnvironment.Sandbox,log);
+            var result = await req.VerifyPayPalTransactionAsync(PayPalEnvironment.Live,log);
             
             if(result.IsVerified)
             {
-                log.LogInformation($"Buyer {result.Transaction.PayerEmail} paid {result.Transaction.Gross} for item {result.Transaction.ItemNumber}");
+                log.LogInformation($"Buyer {result.Transaction.PayerEmail} paid {result.Transaction.Gross} with fee {result.Transaction.Fee}");
             }
 
             return new OkResult();
