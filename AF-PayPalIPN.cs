@@ -22,7 +22,7 @@ namespace Lighthouse.AF_PayPalIPN
             
             if(result.IsVerified)
             {
-                log.LogInformation($"Buyer {result.Transaction.PayerEmail} paid {result.Transaction.Gross} for item {result.Transaction.ItemNumber}");
+                log.LogInformation($"Buyer {result.Transaction.PayerEmail} paid {result.Transaction.Gross} with fee {result.Transaction.Fee}");
             }
 
             return new OkResult();
