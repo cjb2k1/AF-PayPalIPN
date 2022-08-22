@@ -31,18 +31,24 @@ namespace Lighthouse.AF_PayPalIPN
                 log.LogInformation($"Buyer {result.Transaction.PayerEmail} paid {result.Transaction.Gross} with fee {result.Transaction.Fee}");
                 var fee = result.Transaction.Fee;
 
-                var laresponse = Main(fee);
+                await Main(fee, log);
             }
 
             return new OkResult();
         }
 
-        private static async Task Main(decimal fee)
+        private static async Task Main(decimal fee, ILogger log)
         {
             var jsonfee = JsonConvert.SerializeObject(fee);
             var data = new StringContent(jsonfee, Encoding.UTF8, "application/json");
             
             var response = await httpClient.PostAsync(logicAppUri,data);
+
+            string result = response.Content.ReadAsStringAsync().Result;
+
+            log.LogInformation(result);
+
+            return;
         }
     }
 }
