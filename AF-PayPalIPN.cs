@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using Lighthouse.AF_PayPalIPN.Extensions;
+using Lighthouse.AF_PayPalIPN.Model;
 
 namespace Lighthouse.AF_PayPalIPN
 {
@@ -27,52 +28,26 @@ namespace Lighthouse.AF_PayPalIPN
             if(result.IsVerified)
             {
                 log.LogInformation($"Buyer {result.Transaction.PayerEmail} paid {result.Transaction.Gross} with fee {result.Transaction.Fee}");
-                var fee = result.Transaction.Fee;
+                
+                var labody = new LogicAppBody
+                {
+                    Fee = result.Transaction.Fee,
+                    PaymentDate = result.Transaction.PaymentDate,
+                    BuyerEmail = result.Transaction.PayerEmail
+                };
 
-                await Main(fee, log);
-            }
+                var jsonString = JsonConvert.SerializeObject(labody);
 
-            return new OkResult();
-        }
+                var data = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-        private static async Task Main(decimal fee, ILogger log)
-        {
-            var jsonfee = JsonConvert.SerializeObject(fee);
-            var data = new StringContent(jsonfee, Encoding.UTF8, "application/json");
-            
-            var response = await httpClient.PostAsync(logicAppUri,data);
+                var response = await httpClient.PostAsync(logicAppUri,data);
 
-            string result = response.Content.ReadAsStringAsync().Result;
+                string laresult = response.Content.ReadAsStringAsync().Result;
 
-            log.LogInformation(result);
-
-            return;
-        }
-    }
-
-    public static class IpnHandler
-    {
-        [FunctionName("IpnHandler")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
-            ILogger log)
-        {
-            var result = await req.VerifyPayPalTransactionAsync(PayPalEnvironment.Sandbox, log);
-            if (result.IsVerified)
-            {
-                log.LogInformation("yes it's verified!");
-                log.LogInformation($"the buyer is {result.Transaction.PayerEmail}, and they paid {result.Transaction.Gross} for item {result.Transaction.ItemNumber}");
-            }
-            else
-            {
-                log.LogInformation("no, not verified");
+                log.LogInformation(laresult);
             }
 
             return new OkResult();
         }
     }
-    
-    
-
-
 }
