@@ -80,5 +80,8 @@ namespace Lighthouse.AF_PayPalIPN.Model
 
         [JsonProperty("payment_type")]
         public string PaymentType { get; set; }
+
+        [JsonProperty("payment_date")]
+        public string PaymentDate { get; set; }
     }
 }
