@@ -29,13 +29,16 @@ namespace Lighthouse.AF_PayPalIPN
             {
                 log.LogInformation($"Buyer {result.Transaction.PayerEmail} paid {result.Transaction.Gross} with fee {result.Transaction.Fee}");
 
+                var ipnDateParser = new IPNDateParser();
+
                 var labody = new LogicAppBody
                 {
                     Fee = result.Transaction.Fee,
                     AuthID = result.Transaction.AuthID,
                     BuyerEmail = result.Transaction.PayerEmail,
                     TxnType = result.Transaction.TransactionType,
-                    TxnID = result.Transaction.TransactionId
+                    TxnID = result.Transaction.TransactionId,
+                    TransactionDate = ipnDateParser.parseDateTime(result.Transaction.PaymentDate)
                 };
 
                 var jsonString = JsonConvert.SerializeObject(labody);

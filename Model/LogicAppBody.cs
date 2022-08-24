@@ -9,5 +9,6 @@ namespace Lighthouse.AF_PayPalIPN.Model
             public string BuyerEmail { get; set; }
             public string TxnType { get; set; }
             public string TxnID { get; set; }
+            public DateTime TransactionDate { get; set; }
         }
 }
