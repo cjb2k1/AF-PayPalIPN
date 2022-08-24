@@ -29,10 +29,14 @@ namespace Lighthouse.AF_PayPalIPN
             {
                 log.LogInformation($"Buyer {result.Transaction.PayerEmail} paid {result.Transaction.Gross} with fee {result.Transaction.Fee}");
                 
+                var laDateTime = new DateTimeExtension();
+
+                laDateTime.strDateTime = result.Transaction.PaymentDate;
+
                 var labody = new LogicAppBody
                 {
                     Fee = result.Transaction.Fee,
-                    PaymentDate = result.Transaction.PaymentDate,
+                    PaymentDate = laDateTime.dtDateTime(laDateTime.strDateTime),
                     BuyerEmail = result.Transaction.PayerEmail
                 };
 
