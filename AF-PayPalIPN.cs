@@ -47,7 +47,7 @@ namespace Lighthouse.AF_PayPalIPN
 
                 var response = await httpClient.PostAsync(logicAppUri,data);
 
-                string laresult = response.Content.ReadAsStringAsync().Result;
+                string laresult = response.StatusCode.ToString();
 
                 log.LogInformation(laresult);
             }
