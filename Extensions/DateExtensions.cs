@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using Lighthouse.AF_PayPalIPN.Model;
 
 namespace Lighthouse.AF_PayPalIPN.Extensions
