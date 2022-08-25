@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using Lighthouse.AF_PayPalIPN.Model;
 
 namespace Lighthouse.AF_PayPalIPN.Extensions
 {
@@ -7,19 +8,42 @@ namespace Lighthouse.AF_PayPalIPN.Extensions
     {
         public DateTime parseDateTime (string strDateTime)
         {
-            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
             DateTime dtDateTime;
+            char[] delimiterChars = {' ',':',','};
+            String strOutput;
+            
+            string[] strElements = strDateTime.Split(delimiterChars, System.StringSplitOptions.RemoveEmptyEntries);
 
-            if(strDateTime.Contains("PDT"))
+            var strFormat = new DateTimeFormat
             {
-                dtDateTime = DateTime.ParseExact(strDateTime.Replace("PDT","-08:00"), "dd-MMM-yy HH:mm:ss zzz", culture);
-            }
-            else
-            {
-                dtDateTime = DateTime.ParseExact(strDateTime.Replace("PST","-07:00"), "dd-MMM-yy HH:mm:ss zzz", culture);
-            }
+                strHour = strElements[0],
+                strMin = strElements[1],
+                strSec = strElements[2],
+                strMonth = strElements[3],
+                strDay = strElements[4],
+                strYear = strElements[5],
+                //strTZ = strElements[6]
+                strTZ = "Pacific Standard Time"
+            };
+            
+            //strFormat.strTZ = "Pacific Standard Time";
 
-            dtDateTime = dtDateTime.ToUniversalTime();
+            var strDate = strFormat.strDay + "-" + strFormat.strMonth + "-" + strFormat.strYear;
+            var dtDate = new DateTime();
+
+            dtDate = DateTime.Parse(strDate);
+
+            var strTime = strFormat.strHour + ":" + strFormat.strMin + ":" + strFormat.strSec;
+
+            var dtTime = new DateTime();
+
+            dtTime = DateTime.Parse(strTime);
+
+            dtDateTime = dtDate.Date.Add(dtTime.TimeOfDay);
+
+            TimeZoneInfo tzInfo = TimeZoneInfo.FindSystemTimeZoneById(strFormat.strTZ);
+
+            dtDateTime = TimeZoneInfo.ConvertTimeToUtc(dtDateTime,tzInfo);
 
             return dtDateTime;
         }
