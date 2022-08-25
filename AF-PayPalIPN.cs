@@ -22,8 +22,8 @@ namespace Lighthouse.AF_PayPalIPN
         [FunctionName("AF_PayPalIPN")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req, ILogger log)
-        {   
-            var result = await req.VerifyPayPalTransactionAsync(PayPalEnvironment.Sandbox,log);
+        { 
+            var result = await req.VerifyPayPalTransactionAsync(PayPalEnvironment.Live,log);
             
             if(result.IsVerified)
             {
