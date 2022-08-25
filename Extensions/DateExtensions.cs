@@ -10,7 +10,6 @@ namespace Lighthouse.AF_PayPalIPN.Extensions
         {
             DateTime dtDateTime;
             char[] delimiterChars = {' ',':',','};
-            String strOutput;
             
             string[] strElements = strDateTime.Split(delimiterChars, System.StringSplitOptions.RemoveEmptyEntries);
 
@@ -22,11 +21,8 @@ namespace Lighthouse.AF_PayPalIPN.Extensions
                 strMonth = strElements[3],
                 strDay = strElements[4],
                 strYear = strElements[5],
-                //strTZ = strElements[6]
                 strTZ = "Pacific Standard Time"
             };
-            
-            //strFormat.strTZ = "Pacific Standard Time";
 
             var strDate = strFormat.strDay + "-" + strFormat.strMonth + "-" + strFormat.strYear;
             var dtDate = new DateTime();
